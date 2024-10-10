@@ -1,10 +1,10 @@
-import MenuPage from "@/components/Menu";
 import Image from "next/image";
+import MenuPage from "../components/Menu";
 
 export default function Home() {
   return (
     <main>
-      <MenuPage/>
+      <MenuPage />
     </main>
   );
 }
