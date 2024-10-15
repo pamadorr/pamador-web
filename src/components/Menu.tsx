@@ -1,319 +1,265 @@
-"use client";
+'use client'
 
-import { FC, useEffect, useState, useRef } from "react";
-import Image from "next/image";
+import { FC, useEffect, useState, useRef, useMemo } from 'react'
+import Image from 'next/image'
+import ProductModal from './ProductModal'
 
-// Group the items by category
-const groupByCategory = (items: any[]) => {
-  return items.reduce((result: any, item) => {
-    (result[item.category] = result[item.category] || []).push(item);
-    return result;
-  }, {});
-};
+import image from '../assets/product-placeholder.png'
+import LazyImage from './LazyImage'
 
-const MenuPage: FC = () => {
-  const [isSticky, setIsSticky] = useState(false);
-  const [activeCategory, setActiveCategory] = useState<string>("Tamdyr");
+interface MenuItem {
+  id: number
+  name: string
+  time: string
+  price: string
+  image: string
+  category: string
+}
 
-  const categories = ["Tamdyr", "Kebab", "Salads", "Soups", "Desserts"];
+interface MenuPage {
+  menuItemss: MenuItem[]
+}
+
+const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
+  const [isSticky, setIsSticky] = useState(false)
+  const [activeCategory, setActiveCategory] = useState<string>('Tamdyr')
+  const [theme, setTheme] = useState<Object>([])
+  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [isModalVisible, setIsModalVisible] = useState(false)
+
+  useEffect(() => {
+    console.log('Client-side menuItems:', menuItemss)
+    console.log('Grouped items:', groupedItems)
+    setTheme(menuItemss?.restaurants[0]?.appTheme) // This will log in the browser's console
+    console.log('theme is:', theme)
+  }, [menuItemss])
 
   // Create refs for each category section
-  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({});
+  const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
-  const menuItems = [
-    // Tamdyr category
-    {
-      id: 1,
-      name: "Guzyňyň gapyrgalary",
-      time: "25min",
-      price: "55.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Tamdyr",
-    },
-    {
-      id: 2,
-      name: "Güweçde guzy eti",
-      time: "25min",
-      price: "55.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Tamdyr",
-    },
-    {
-      id: 3,
-      name: "Guzyň ýeke gapyrgasy",
-      time: "30min",
-      price: "60.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Tamdyr",
-    },
-    {
-      id: 4,
-      name: "Towuk rulony",
-      time: "25min",
-      price: "45.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Tamdyr",
-    },
-
-    // Kebab category
-    {
-      id: 6,
-      name: "Guzyňyň egni",
-      time: "25min",
-      price: "55.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Kebab",
-    },
-    {
-      id: 7,
-      name: "Towuk kebaby",
-      time: "20min",
-      price: "40.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Kebab",
-    },
-    {
-      id: 8,
-      name: "Dana kebaby",
-      time: "30min",
-      price: "65.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Kebab",
-    },
-    {
-      id: 9,
-      name: "Garryyşly kebab",
-      time: "25min",
-      price: "60.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Kebab",
-    },
-
-    // Salads category
-    {
-      id: 11,
-      name: "Çoban salaty",
-      time: "15min",
-      price: "25.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Salads",
-    },
-    {
-      id: 12,
-      name: "Grik salaty",
-      time: "15min",
-      price: "30.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Salads",
-    },
-    {
-      id: 13,
-      name: "Balykly salat",
-      time: "20min",
-      price: "45.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Salads",
-    },
-
-    // Soups category
-    {
-      id: 14,
-      name: "Pomidorly çorba",
-      time: "25min",
-      price: "35.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Soups",
-    },
-    {
-      id: 15,
-      name: "Balyk çorbasy",
-      time: "30min",
-      price: "50.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Soups",
-    },
-    {
-      id: 16,
-      name: "Etli çorba",
-      time: "20min",
-      price: "40.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Soups",
-    },
-
-    // Desserts category
-    {
-      id: 17,
-      name: "Süýji çörek",
-      time: "15min",
-      price: "20.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Desserts",
-    },
-    {
-      id: 18,
-      name: "Baklava",
-      time: "10min",
-      price: "30.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Desserts",
-    },
-    {
-      id: 19,
-      name: "Gyzyl güller",
-      time: "20min",
-      price: "35.00 manat",
-      image: "https://via.placeholder.com/200x150",
-      category: "Desserts",
-    },
-  ];
+  // Sanitize category names for valid CSS class usage
+  const sanitizeCategory = (category: string) => category.replace(/[^\w-]/g, '') // Remove any non-alphanumeric or non-dash characters
 
   useEffect(() => {
     const activeCategoryElement = document.querySelector(
-      `.category-${activeCategory}`
-    );
+      `.category-${sanitizeCategory(activeCategory)}`,
+    )
     if (activeCategoryElement) {
       activeCategoryElement.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest",
-        inline: "center",
-      });
+        behavior: 'smooth',
+        block: 'nearest',
+        inline: 'center',
+      })
     }
-  }, [activeCategory]);
+  }, [activeCategory])
 
   // Sticky menu logic
   useEffect(() => {
     const handleScroll = () => {
-      const offset = window.scrollY;
-      if (offset > 150) {
-        setIsSticky(true);
-      } else {
-        setIsSticky(false);
-      }
+      const offset = window.scrollY
+      setIsSticky(offset > 150)
 
       // Check active category based on scroll position
-      const categoryPositions = Object.keys(categoryRefs.current).map(
-        (category) => {
-          const ref = categoryRefs.current[category];
-          return {
-            category,
-            offsetTop: ref ? ref.offsetTop : 0,
-          };
+      const categoryPositions = Object.keys(categoryRefs.current).map((category) => {
+        const ref = categoryRefs.current[sanitizeCategory(category)]
+        return {
+          category,
+          offsetTop: ref ? ref.offsetTop : 0,
         }
-      );
+      })
 
-      const scrollPosition = window.scrollY + 200; // Offset to trigger active before reaching the section
+      const scrollPosition = window.scrollY + 200 // Offset to trigger active before reaching the section
 
       for (let i = 0; i < categoryPositions.length; i++) {
-        const currentCategory = categoryPositions[i];
-        const nextCategory = categoryPositions[i + 1];
+        const currentCategory = categoryPositions[i]
+        const nextCategory = categoryPositions[i + 1]
 
         if (
           scrollPosition >= currentCategory.offsetTop &&
           (!nextCategory || scrollPosition < nextCategory.offsetTop)
         ) {
-          setActiveCategory(currentCategory.category);
-          break;
+          setActiveCategory(sanitizeCategory(currentCategory.category)) // Sanitize here
+          break
         }
       }
-    };
+    }
 
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll)
     return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
+      window.removeEventListener('scroll', handleScroll)
+    }
+  }, [])
 
   // Scroll to category when clicked
   const handleCategoryClick = (category: string) => {
-    const categoryElement = categoryRefs.current[category];
+    const sanitizedCategory = sanitizeCategory(category)
+    const categoryElement = categoryRefs.current[sanitizedCategory]
+
     if (categoryElement) {
-      categoryElement.scrollIntoView({ behavior: "smooth" });
+      categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
+
+      // Use setTimeout to delay setting the active category
+      setTimeout(() => {
+        setActiveCategory(sanitizedCategory)
+      }, 500) // Adjust the delay to match the scroll duration
     }
-  };
+  }
 
   // Group menu items by category
-  const groupedItems = groupByCategory(menuItems);
+  const groupedItems = menuItemss?.restaurants[0]?.menus?.reduce((acc, category) => {
+    const categoryName = category.translations[0]?.title || 'Unknown Category'
+    if (category.products && category.products.length > 0) {
+      acc[categoryName] = category.products
+    }
+    return acc
+  }, {})
+
+  const categories = menuItemss?.restaurants[0]?.menus
+    .map((item: any) => item?.translations[0]?.title || '')
+    .filter((categoryName: string) => groupedItems[categoryName])
+
+  const imageParser = (filename: string): string => {
+    const base = `${process.env.NEXT_PUBLIC_IMAGE_STORAGE_URI}`
+    return `${base}/${filename}.webp`
+  }
+
+  const handleProductClick = (product: any) => {
+    setSelectedProduct(product)
+    setIsModalVisible(true)
+  }
+  const productDetails = useMemo(
+    () => ({
+      image: selectedProduct?.images
+        ? imageParser(selectedProduct.images[0]) // Parse the image as needed
+        : image, // Fallback to placeholder
+      title: selectedProduct?.translations[0]?.title || '',
+      price: selectedProduct?.price || '',
+      description: selectedProduct?.translations[0]?.description || '',
+      preparationTime: selectedProduct?.preparationTime,
+    }),
+    [selectedProduct],
+  )
 
   return (
-    <div className="bg-white">
+    <div className="bg-lightGray">
       {/* Header */}
-      <header className="flex justify-between items-center p-4 bg-green-900 text-white">
-        <div className="flex items-center">
-          <Image
-            src="https://via.placeholder.com/100x50"
-            alt="Rahat Bistro"
-            width={100}
-            height={50}
-          />
-        </div>
-        <button className="text-xl">☰</button>
-      </header>
-
-      {/* Banner */}
-      <div className="p-4">
-        <Image
-          src="https://via.placeholder.com/500x200"
-          alt="Tamdyr Banner"
-          width={500}
-          height={200}
-          className="rounded-lg"
-        />
-      </div>
-
       {/* Category Menu - Sticky and Scrollable */}
       <div
-        className={`w-full bg-white py-2 ${
-          isSticky ? "sticky top-0 z-50" : ""
+        className={`sticky top-0 z-50 w-full bg-lightGray py-2 ${
+          isSticky ? 'sticky top-0 z-50' : ''
         }`}
       >
-        <div className="flex overflow-x-auto space-x-4 px-4 scrollbar-hide">
-          {categories.map((category, index) => (
-            <div
-              key={index}
-              className={`whitespace-nowrap text-center py-2 px-4 rounded-full cursor-pointer category-${category} ${
-                activeCategory === category
-                  ? "bg-green-900 text-white"
-                  : "bg-gray-200 text-black"
-              }`}
-              onClick={() => handleCategoryClick(category)}
-            >
-              {category}
-            </div>
-          ))}
+        <div className="no-scrollbar scrollbar-hide flex space-x-3 overflow-x-auto px-4">
+          {categories?.map((category, index) => {
+            const sanitizedCategory = sanitizeCategory(category)
+            return (
+              <div
+                key={index}
+                className={`cursor-pointer whitespace-nowrap rounded-full bg-white px-4 py-2 text-center category-${sanitizedCategory} `}
+                style={
+                  activeCategory === sanitizedCategory
+                    ? {
+                        backgroundColor: theme.primary ? theme.primary : '#F7D148',
+                        color: theme.textOnPrimary ? theme.textOnPrimary : '#241606',
+                      }
+                    : {}
+                }
+                onClick={() => handleCategoryClick(category)}
+              >
+                {category}
+              </div>
+            )
+          })}
         </div>
       </div>
 
       {/* Menu Section - Grouped by Category */}
       <section className="p-4">
-        {Object.keys(groupedItems).map((category) => (
-          <div
-            key={category}
-            ref={(el) => (categoryRefs.current[category] = el)}
-            className="mb-8"
-          >
-            <h2 className="text-2xl font-bold mb-4">{category}</h2>
-            <div className="grid grid-cols-2 gap-4">
-              {groupedItems[category].map((item: any) => (
-                <div key={item.id} className="border rounded-lg p-4">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={200}
-                    height={150}
-                    className="rounded-lg"
-                  />
-                  <h3 className="text-lg font-semibold mt-2">{item.name}</h3>
-                  <p className="text-sm text-gray-600">{item.time}</p>
-                  <p className="text-green-900 font-bold">{item.price}</p>
+        {groupedItems &&
+          Object?.keys(groupedItems)?.map((category) => {
+            const sanitizedCategory = sanitizeCategory(category)
+            return (
+              <div
+                key={category}
+                ref={(el) => (categoryRefs.current[sanitizedCategory] = el)}
+                className="mb-8"
+              >
+                <h2 className="mb-4 text-2xl font-bold">{category}</h2>
+                <div className="grid grid-cols-2 gap-4">
+                  {groupedItems[category].map((item: any) => (
+                    <div
+                      key={item.id}
+                      className="gap-2 rounded-xl border"
+                      onClick={() => handleProductClick(item)}
+                    >
+                      <LazyImage
+                        src={item.images ? imageParser(item.images && item.images[0]) : image} // Fallback image if none
+                        alt={item.translations[0].title}
+                        width={300}
+                        height={200}
+                        className="rounded-tl-xl rounded-tr-xl"
+                      />
+                      <div className="p-2">
+                        <p className="flex items-center gap-1 text-sm text-primaryText">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                          >
+                            <path
+                              d="M12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25Z"
+                              stroke="#241606"
+                              stroke-width="1.5"
+                              stroke-miterlimit="10"
+                            />
+                            <path
+                              d="M12 12L15.7125 8.28751"
+                              stroke="#241606"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                            <path
+                              d="M9.75 0.75H14.25"
+                              stroke="#241606"
+                              stroke-width="1.5"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                            />
+                          </svg>
+                          {item.preparationTime} min
+                        </p>
+                        <h3 className="text-md leading-1 line-clamp-1 font-semibold">
+                          {item.translations[0].title}
+                        </h3>
+                        <p
+                          className="text-md font-bold"
+                          style={{
+                            color: theme.primary ? theme.primary : '#241606',
+                          }}
+                        >
+                          {item.price} TMT
+                        </p>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </div>
-        ))}
+              </div>
+            )
+          })}
       </section>
+      {selectedProduct && (
+        <ProductModal
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          {...productDetails}
+          theme={theme}
+        />
+      )}
     </div>
-  );
-};
+  )
+}
 
-export default MenuPage;
+export default MenuPage

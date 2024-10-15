@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ["via.placeholder.com"],
+    domains: ['storage.pamador.com.tm'],
   },
-};
-export default nextConfig;
+}
+export default nextConfig
