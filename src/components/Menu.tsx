@@ -199,12 +199,12 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
                         height={200}
                         className="rounded-tl-xl rounded-tr-xl"
                       />
-                      <div className="p-2">
-                        <p className="flex items-center gap-1 text-sm text-primaryText">
+                      <div className="p-3">
+                        <p className="flex items-center gap-1 text-xs text-primaryText">
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
-                            width="20"
-                            height="20"
+                            width="16"
+                            height="16"
                             viewBox="0 0 24 24"
                             fill="none"
                           >

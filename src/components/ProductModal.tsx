@@ -32,7 +32,7 @@ const ProductModal: FC<ProductModalProps> = ({
       setShowModal(true)
     } else {
       // Delay unmounting for animation to complete
-      setTimeout(() => setShowModal(false), 300)
+      setTimeout(() => setShowModal(false), 100)
     }
   }, [isVisible])
 
@@ -74,7 +74,7 @@ const ProductModal: FC<ProductModalProps> = ({
               }
             }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
-            className="h-[70dvh] w-full rounded-t-2xl bg-white shadow-lg"
+            className="h-max w-full rounded-t-2xl bg-white shadow-lg"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside the modal content
           >
             {/* Close button positioned on top of the image */}
@@ -84,7 +84,7 @@ const ProductModal: FC<ProductModalProps> = ({
               alt={title}
               width={500}
               height={250}
-              className="h-auto w-full rounded-t-2xl object-cover"
+              className="h-auto w-full min-h-[250px] rounded-t-2xl object-cover"
             />
             {/* </div> */}
 
