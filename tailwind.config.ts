@@ -15,6 +15,9 @@ const config: Config = {
         lightGray: '#F8F8F7',
         foreground: 'var(--foreground)',
       },
+      fontFamily: {
+        Montserrat: ['Montserrat', 'sans-serif'], // You can fall back to a system font like 'sans-serif'
+      },
     },
   },
   plugins: [],
