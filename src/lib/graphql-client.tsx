@@ -16,6 +16,7 @@ export const GET_MENU_ITEMS = gql`
       productsView
       phoneNumbers: phone_numbers
       services
+      qr_used
       openTime: open_time
       closeTime: close_time
       translations: restaurant_translations(where: { language_id: { _eq: $languageId } }) {

@@ -14,7 +14,7 @@ const Home: NextPage = () => {
       </Head>
       <div id="home" className="min-h-[100dvh] w-[100vw] bg-primary p-[5vw] pt-5">
         <Header />
-        <div className="mx-auto flex flex-col items-center justify-center">
+        <div className="m-auto grow mt-10 lg:w-2/4 md:w-2/4 w-full flex flex-col items-center justify-center">
           <Slogan />
           <Download />
         </div>

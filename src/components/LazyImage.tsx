@@ -65,7 +65,7 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
             alt={alt}
             width={width}
             height={height}
-            className={` transition-opacity duration-500 ease-in-out ${
+            className={` transition-opacity w-full duration-500 ease-in-out ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="lazy"

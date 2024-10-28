@@ -24,7 +24,7 @@ const Header = ({ shouldShowLogoType }: Props) => {
       <div className="menu flex gap-5 lg:gap-10">
         <Link
           href="/long-stories-short"
-          className={`relative lg:text-2xl ${
+          className={`relative lg:text-xl ${
             pathname === '/long-stories-short' ? 'active' : ''
           } before:duration-120 before:absolute before:bottom-[-0.8vw] before:left-0 before:h-[2px] before:w-0 before:bg-black before:transition-[width] before:ease-in-out before:content-[''] hover:before:w-[75%] ${
             pathname === '/long-stories-short' ? 'before:w-[75%]' : ''
@@ -34,7 +34,7 @@ const Header = ({ shouldShowLogoType }: Props) => {
         </Link>
         <Link
           href="/join-us"
-          className={`relative lg:text-2xl ${
+          className={`relative lg:text-xl ${
             pathname === '/join-us' ? 'active' : ''
           } before:duration-120 before:absolute before:bottom-[-0.8vw] before:left-0 before:h-[2px] before:w-0 before:bg-black before:transition-[width] before:ease-in-out before:content-[''] hover:before:w-[75%] ${
             pathname === '/join-us' ? 'before:w-[75%]' : ''
