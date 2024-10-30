@@ -15,12 +15,20 @@
 /* } */
 @font-face {
   font-family: 'montserrat-alternates';
-  src: url('/fonts/montserrat-alternates.ttf') format('truetype'); /* Adjust the format if needed */
-  font-weight: normal;
-  font-style: normal;
+  src: url('/assets/fonts/montserrat-alternates.ttf') format('truetype'); /* Adjust the format if needed */
+}
+@font-face {
+  font-family: 'panefresco';
+  src: url('/assets/fonts/panefresco-regular.ttf') format('truetype');
 }
 
+.middle-slogan{
+  font-family: 'montserrat-alternates';
+}
+.panefresco{
+  font-family: 'panefresco';
+}
 /* Optionally, set a default font for the whole body */
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: Arial, Helvetica, sans-serif; */
 }

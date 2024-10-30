@@ -222,22 +222,22 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
                                 <path
                                   d="M12 20.25C16.5563 20.25 20.25 16.5563 20.25 12C20.25 7.44365 16.5563 3.75 12 3.75C7.44365 3.75 3.75 7.44365 3.75 12C3.75 16.5563 7.44365 20.25 12 20.25Z"
                                   stroke="#241606"
-                                  stroke-width="1.5"
-                                  stroke-miterlimit="10"
+                                  strokeWidth="1.5"
+                                  strokeMiterlimit="10"
                                 />
                                 <path
                                   d="M12 12L15.7125 8.28751"
                                   stroke="#241606"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                                 <path
                                   d="M9.75 0.75H14.25"
                                   stroke="#241606"
-                                  stroke-width="1.5"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                                  strokeWidth="1.5"
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
                                 />
                               </svg>
                               {item.preparationTime} min
