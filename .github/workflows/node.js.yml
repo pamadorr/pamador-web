@@ -19,9 +19,17 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: create env.production file
+      run: |
+        touch .env.production
+        echo NEXT_PUBLIC_IMAGE_STORAGE_URI="${{ secrets.NEXT_PUBLIC_IMAGE_STORAGE_URI }}" >> .env.production
+        echo NEXT_PUBLIC_GRAPHQL_URI="${{ secrets.NEXT_PUBLIC_GRAPHQL_URI }}" >> .env.production
     - name: Use Node.js ${{ matrix.node-version }}
       uses: actions/setup-node@v4
       with:
         node-version: ${{ matrix.node-version }}
         cache: 'yarn'
     - run: yarn
+    - run: sudo pm2 stop pamador-web
+    - run: yarn build
+    - run: sudo pm2 restart pamador-web
