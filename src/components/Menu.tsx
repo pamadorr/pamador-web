@@ -152,11 +152,7 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
             }`}
           >
             <div className="no-scrollbar scrollbar-hide flex gap-3 overflow-x-auto px-4 lg:flex-col lg:gap-0">
-              <div className="hidden px-4 py-2 text-xl font-bold lg:block">
-                {window.location.hostname === 'pamador.com.tm'
-                  ? 'Menu'
-                  : 'QR menu'}
-              </div>
+              <div className="hidden px-4 py-2 text-xl font-bold lg:block">Menu</div>
               {categories?.map((category, index) => {
                 const sanitizedCategory = sanitizeCategory(category)
                 return (
