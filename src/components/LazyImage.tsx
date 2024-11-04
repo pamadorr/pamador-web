@@ -29,12 +29,13 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
       },
     )
 
-    if (imageRef.current) {
-      observer.observe(imageRef.current)
+    const currentRef = imageRef.current
+    if (currentRef) {
+      observer.observe(currentRef)
     }
 
     return () => {
-      if (imageRef.current) {
+      if (currentRef) {
         observer.disconnect()
       }
     }
@@ -47,25 +48,23 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
   return (
     <div ref={imageRef} className={className}>
       {isVisible ? (
-        <div className="relative">
+        <div className="relative m-0 p-0">
           {!isLoaded && (
-            // <div className="">
             <Image
               src="/assets/product-placeholder.png"
               alt={alt}
               width={width}
               height={height}
-              className="absolute inset-0 animate-pulse  bg-gray-200"
+              className="absolute inset-0 animate-pulse bg-gray-200"
               loading="lazy"
             />
-            // </div>
           )}
           <Image
             src={src}
             alt={alt}
             width={width}
             height={height}
-            className={` transition-opacity w-full duration-500 ease-in-out ${
+            className={`w-full transition-opacity duration-500 ease-in-out ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="lazy"
@@ -74,16 +73,14 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
           />
         </div>
       ) : (
-        // <div className=" ">
         <Image
           src="/assets/product-placeholder.png"
           alt={alt}
           width={width}
           height={height}
-          className="animate-pulse  bg-gray-200"
+          className="animate-pulse bg-gray-200"
           loading="lazy"
         />
-        // </div>
       )}
     </div>
   )

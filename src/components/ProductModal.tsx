@@ -9,8 +9,8 @@ interface ProductModalProps {
   title: string
   price: string
   description: string
-  theme: object
-  preparationTime: number
+  theme: any
+  preparationTime: any
 }
 
 const ProductModal: FC<ProductModalProps> = ({
@@ -109,7 +109,7 @@ const ProductModal: FC<ProductModalProps> = ({
               alt={title}
               width={500}
               height={250}
-              className="h-auto min-h-[250px] w-full object-cover"
+              className="h-auto bg-lightGray min-h-[250px] w-full object-cover"
             />
 
             <div className="mt-2 flex flex-col p-4 pt-0">

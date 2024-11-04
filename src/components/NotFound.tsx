@@ -1,7 +1,6 @@
 // components/LottiePlayer.js
 import Lottie from 'lottie-react'
-import animationData from '../../public/assets/animation.json' // Or replace with your own JSON file path
-import { div } from 'framer-motion/client'
+import animationData from '../../public/assets/animation.json'
 import Header from './Header'
 
 const NotFound = () => {

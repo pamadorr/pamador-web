@@ -1,44 +1,52 @@
 'use client'
 
 import { FC, useEffect, useState, useRef, useMemo } from 'react'
-import Image from 'next/image'
 import ProductModal from './ProductModal'
 import LazyImage from './LazyImage'
 import NotFound from './NotFound'
 
-interface MenuItem {
+interface Product {
   id: number
-  name: string
-  time: string
+  images: string[]
+  translations: { title: string; description: string }[]
   price: string
-  image: string
-  category: string
+  preparationTime: string
 }
 
-interface MenuPage {
-  menuItemss: MenuItem[]
+interface Menu {
+  translations: { title: string }[]
+  products: Product[]
 }
 
-const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
+interface Restaurant {
+  appTheme: {
+    primary: string
+    textOnPrimary: string
+  }
+  qr_used: boolean
+  menus: Menu[]
+  id: string
+}
+
+interface MenuPageProps {
+  menuItemss: Restaurant
+}
+
+const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
   const [isSticky, setIsSticky] = useState(false)
-  const [activeCategory, setActiveCategory] = useState<string>('Tamdyr')
-  const [theme, setTheme] = useState<Object>([])
-  const [selectedProduct, setSelectedProduct] = useState<any>(null)
+  const [activeCategory, setActiveCategory] = useState<string>('')
+  const [theme, setTheme] = useState<Restaurant['appTheme']>({ primary: '', textOnPrimary: '' })
+  const [selectedProduct, setSelectedProduct] = useState<Product | null>(null)
   const [isModalVisible, setIsModalVisible] = useState(false)
 
   useEffect(() => {
-    console.log('Client-side menuItems:', menuItemss)
-    console.log('Grouped items:', groupedItems)
-    console.log('hostname', window.location.hostname)
-    setTheme(menuItemss?.restaurants[0]?.appTheme) // This will log in the browser's console
-    console.log('theme is:', theme)
+    setTheme(menuItemss.appTheme || {})
+    console.log(menuItemss)
   }, [menuItemss])
 
-  // Create refs for each category section
   const categoryRefs = useRef<Record<string, HTMLDivElement | null>>({})
 
-  // Sanitize category names for valid CSS class usage
-  const sanitizeCategory = (category: string) => category.replace(/[^\w-]/g, '') // Remove any non-alphanumeric or non-dash characters
+  const sanitizeCategory = (category: string) => category.replace(/[^\w-]/g, '')
 
   useEffect(() => {
     const activeCategoryElement = document.querySelector(
@@ -53,13 +61,11 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
     }
   }, [activeCategory])
 
-  // Sticky menu logic
   useEffect(() => {
     const handleScroll = () => {
       const offset = window.scrollY
       setIsSticky(offset > 150)
 
-      // Check active category based on scroll position
       const categoryPositions = Object.keys(categoryRefs.current).map((category) => {
         const ref = categoryRefs.current[sanitizeCategory(category)]
         return {
@@ -68,7 +74,7 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
         }
       })
 
-      const scrollPosition = window.scrollY + 200 // Offset to trigger active before reaching the section
+      const scrollPosition = window.scrollY + 200
 
       for (let i = 0; i < categoryPositions.length; i++) {
         const currentCategory = categoryPositions[i]
@@ -78,7 +84,7 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
           scrollPosition >= currentCategory.offsetTop &&
           (!nextCategory || scrollPosition < nextCategory.offsetTop)
         ) {
-          setActiveCategory(sanitizeCategory(currentCategory.category)) // Sanitize here
+          setActiveCategory(sanitizeCategory(currentCategory.category))
           break
         }
       }
@@ -90,7 +96,6 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
     }
   }, [])
 
-  // Scroll to category when clicked
   const handleCategoryClick = (category: string) => {
     const sanitizedCategory = sanitizeCategory(category)
     const categoryElement = categoryRefs.current[sanitizedCategory]
@@ -98,40 +103,46 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
     if (categoryElement) {
       categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' })
 
-      // Use setTimeout to delay setting the active category
       setTimeout(() => {
         setActiveCategory(sanitizedCategory)
-      }, 500) // Adjust the delay to match the scroll duration
+      }, 500)
     }
   }
 
-  // Group menu items by category
-  const groupedItems = menuItemss?.restaurants[0]?.menus?.reduce((acc, category) => {
-    const categoryName = category.translations[0]?.title || 'Unknown Category'
-    if (category.products && category.products.length > 0) {
-      acc[categoryName] = category.products
-    }
-    return acc
-  }, {})
+  const groupedItems = useMemo(() => {
+    return menuItemss?.menus?.reduce(
+      (acc: { [key: string]: Product[] }, category) => {
+        const categoryName = category.translations[0]?.title || 'Unknown Category'
+        if (category.products && category.products.length > 0) {
+          acc[categoryName] = category.products
+        }
+        return acc
+      },
+      {} as { [key: string]: Product[] },
+    )
+  }, [menuItemss])
 
-  const categories = menuItemss?.restaurants[0]?.menus
-    .map((item: any) => item?.translations[0]?.title || '')
-    .filter((categoryName: string) => groupedItems[categoryName])
+  const categories = useMemo(() => {
+    return menuItemss?.menus
+      .map((item) => item?.translations[0]?.title || '')
+      .filter((categoryName) => groupedItems && groupedItems[categoryName])
+  }, [menuItemss, groupedItems])
 
   const imageParser = (filename: string): string => {
     const base = `${process.env.NEXT_PUBLIC_IMAGE_STORAGE_URI}`
-    return `${base}/${filename}.webp`
+    return `${base}/restaurants/${filename}.webp`
   }
 
-  const handleProductClick = (product: any) => {
+  const handleProductClick = (product: Product) => {
     setSelectedProduct(product)
     setIsModalVisible(true)
   }
+
   const productDetails = useMemo(
     () => ({
       image: selectedProduct?.images
-        ? imageParser(selectedProduct.images[0]) // Parse the image as needed
-        : '/assets/product-placeholder.png', // Fallback to placeholder
+        ? imageParser(selectedProduct.images[0])
+        : '/assets/product-placeholder.png',
       title: selectedProduct?.translations[0]?.title || '',
       price: selectedProduct?.price || '',
       description: selectedProduct?.translations[0]?.description || '',
@@ -142,14 +153,10 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
 
   return (
     <div className="min-h-[100dvh] bg-lightGray">
-      {/* Header */}
-      {/* Category Menu - Sticky and Scrollable */}
-      {!menuItemss || menuItemss?.restaurants[0]?.qr_used ? (
+      {!menuItemss || menuItemss?.qr_used ? (
         <div className="container mx-auto block w-full lg:flex lg:w-10/12">
           <div
-            className={`sticky top-0 z-50 h-full w-full bg-lightGray py-2 lg:w-1/4 ${
-              isSticky ? 'sticky top-0 z-50' : ''
-            }`}
+            className={`sticky top-0 z-50 h-full w-full bg-lightGray py-2 lg:w-1/4 ${isSticky ? 'sticky top-0 z-50' : ''}`}
           >
             <div className="no-scrollbar scrollbar-hide flex gap-3 overflow-x-auto px-4 lg:flex-col lg:gap-0">
               <div className="hidden px-4 py-2 text-xl font-bold lg:block">Menu</div>
@@ -162,8 +169,8 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
                     style={
                       activeCategory === sanitizedCategory
                         ? {
-                            backgroundColor: theme.primary ? theme.primary : '#F7D148',
-                            color: theme.textOnPrimary ? theme.textOnPrimary : '#241606',
+                            backgroundColor: theme.primary || '#F7D148',
+                            color: theme.textOnPrimary || '#241606',
                           }
                         : {}
                     }
@@ -176,20 +183,21 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
             </div>
           </div>
 
-          {/* Menu Section - Grouped by Category */}
           <section className="w-full p-4 lg:w-3/4">
             {groupedItems &&
-              Object?.keys(groupedItems)?.map((category) => {
+              Object.keys(groupedItems).map((category) => {
                 const sanitizedCategory = sanitizeCategory(category)
                 return (
                   <div
                     key={category}
-                    ref={(el) => (categoryRefs.current[sanitizedCategory] = el)}
+                    ref={(el) => {
+                      categoryRefs.current[sanitizedCategory] = el
+                    }}
                     className="container mb-8"
                   >
                     <h2 className="mb-4 text-3xl font-bold">{category}</h2>
                     <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4">
-                      {groupedItems[category].map((item: any) => (
+                      {groupedItems[category].map((item) => (
                         <div
                           key={item.id}
                           className="gap-2 overflow-hidden rounded-xl border"
@@ -198,9 +206,9 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
                           <LazyImage
                             src={
                               item.images
-                                ? imageParser(item.images && item.images[0])
+                                ? imageParser(item.images[0])
                                 : '/assets/product-placeholder.png'
-                            } // Fallback image if none
+                            }
                             alt={item.translations[0].title}
                             width={300}
                             height={200}
@@ -241,14 +249,7 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
                             <h3 className="text-md leading-1 mt-1 line-clamp-1 font-semibold">
                               {item.translations[0].title}
                             </h3>
-                            <p
-                              className="text-md font-bold"
-                              style={{
-                                color: theme.primary ? theme.primary : '#241606',
-                              }}
-                            >
-                              {item.price} TMT
-                            </p>
+                            <p className="mt-1 text-primaryText">{item.price} TMT</p>
                           </div>
                         </div>
                       ))}
@@ -257,17 +258,21 @@ const MenuPage: FC<MenuPage> = ({ menuItemss }) => {
                 )
               })}
           </section>
-          {selectedProduct && (
-            <ProductModal
-              isVisible={isModalVisible}
-              onClose={() => setIsModalVisible(false)}
-              {...productDetails}
-              theme={theme}
-            />
-          )}
         </div>
       ) : (
-        <NotFound width={100} height={200} color={theme?.primary || '#F7D148'} />
+        <NotFound />
+      )}
+      {selectedProduct && (
+        <ProductModal
+          theme={theme}
+          isVisible={isModalVisible}
+          onClose={() => setIsModalVisible(false)}
+          image={productDetails.image}
+          title={productDetails.title}
+          price={productDetails.price}
+          description={productDetails.description}
+          preparationTime={productDetails.preparationTime}
+        />
       )}
     </div>
   )

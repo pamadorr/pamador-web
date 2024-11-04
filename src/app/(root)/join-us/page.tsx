@@ -1,4 +1,4 @@
-import Header from '../../../components/Header'
+import Header from '../../../components/Header';
 
 const JoinUs = () => {
   return (
@@ -28,7 +28,7 @@ const JoinUs = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default JoinUs
+export default JoinUs;

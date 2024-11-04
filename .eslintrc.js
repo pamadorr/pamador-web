@@ -13,6 +13,8 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'react/react-in-jsx-scope': 'off', // Disable rule as React import is not needed in scope
+    '@typescript-eslint/no-explicit-any': 'off',
     // Add your custom ESLint rules here
   },
 }

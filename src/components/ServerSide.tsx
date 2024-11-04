@@ -7,14 +7,12 @@ interface ServerSideProps {
 
 export default async function ServerSide({ slug }: ServerSideProps) {
   // Use the slug passed as a prop
-  const data = await graphQLClient.request(GET_MENU_ITEMS, { slug })
-
-  console.log('data', data)
+  const data = await graphQLClient.request(GET_MENU_ITEMS, { slug }) as any
 
   return (
     <div>
       {/* Pass the fetched menu items to the client-side component */}
-      <MenuPage menuItemss={data} />
+      <MenuPage menuItemss={data.restaurants[0]} />
     </div>
   )
 }
