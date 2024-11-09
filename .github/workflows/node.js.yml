@@ -18,6 +18,8 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
+    - name: Clear .next cache with sudo
+      run: sudo rm -rf .next/cache
     - uses: actions/checkout@v4
     - name: create env.production file
       run: |
