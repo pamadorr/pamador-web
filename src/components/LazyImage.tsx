@@ -1,15 +1,12 @@
 import { FC, useState, useEffect, useRef } from 'react'
-import Image from 'next/image'
 
 interface LazyImageProps {
   src: string
   alt: string
-  width: number
-  height: number
   className?: string
 }
 
-const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) => {
+const LazyImage: FC<LazyImageProps> = ({ src, alt, className }) => {
   const [isVisible, setIsVisible] = useState(false)
   const [isLoaded, setIsLoaded] = useState(false)
   const imageRef = useRef<HTMLDivElement | null>(null)
@@ -20,7 +17,7 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             setIsVisible(true)
-            observer.disconnect() // Stop observing once the image is visible
+            observer.disconnect() // Stop observing once the img is visible
           }
         })
       },
@@ -48,23 +45,19 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
   return (
     <div ref={imageRef} className={className}>
       {isVisible ? (
-        <div className="relative m-0 p-0">
+        <div className="m-0 p-0">
           {!isLoaded && (
-            <Image
+            <img
               src="/assets/product-placeholder.png"
               alt={alt}
-              width={width}
-              height={height}
-              className="absolute inset-0 animate-pulse bg-gray-200"
+              className="w-full h-full animate-pulse bg-gray-200"
               loading="lazy"
             />
           )}
-          <Image
+          <img
             src={src}
             alt={alt}
-            width={width}
-            height={height}
-            className={`w-full transition-opacity duration-500 ease-in-out ${
+            className={`w-full h-full transition-opacity duration-500 ease-in-out ${
               isLoaded ? 'opacity-100' : 'opacity-0'
             }`}
             loading="lazy"
@@ -73,12 +66,10 @@ const LazyImage: FC<LazyImageProps> = ({ src, alt, width, height, className }) =
           />
         </div>
       ) : (
-        <Image
+        <img
           src="/assets/product-placeholder.png"
           alt={alt}
-          width={width}
-          height={height}
-          className="animate-pulse bg-gray-200"
+          className="animate-pulse w-full h-full bg-gray-200"
           loading="lazy"
         />
       )}

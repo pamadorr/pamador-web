@@ -78,8 +78,8 @@ const ProductModal: FC<ProductModalProps> = ({
             exit={isDesktop ? { scale: 0.1, opacity: 0 } : { y: 100, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
             className={`${
-              isDesktop ? 'h-auto w-[500px] m-auto rounded-2xl' : 'h-max w-full rounded-t-2xl'
-            } relative overflow-hidden  bg-white shadow-lg`}
+              isDesktop ? 'm-auto h-auto w-[500px] rounded-2xl' : 'h-max w-full rounded-t-2xl'
+            } relative overflow-hidden bg-white shadow-lg`}
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Icon */}
@@ -107,9 +107,7 @@ const ProductModal: FC<ProductModalProps> = ({
             <LazyImage
               src={image}
               alt={title}
-              width={500}
-              height={250}
-              className="h-auto bg-lightGray min-h-[250px] w-full object-cover"
+              className="h-auto min-h-[250px] w-full bg-lightGray object-cover"
             />
 
             <div className="mt-2 flex flex-col p-4 pt-0">
@@ -144,7 +142,7 @@ const ProductModal: FC<ProductModalProps> = ({
                 </svg>
                 {preparationTime} min
               </p>
-              <h2 className="mt-3 text-2xl font-bold text-primaryText">{title}</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-primaryText">{title}</h2>
               <p className="mt-2 text-xl font-bold" style={{ color: theme.primary || '#241606' }}>
                 {price} TMT
               </p>
