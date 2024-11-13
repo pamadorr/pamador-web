@@ -2,13 +2,11 @@
 
 import { useEffect, useState, useRef } from 'react'
 import { getCurrentLanguage, setLanguageCookie } from '../lib/cookies'
-import { useRouter } from 'next/navigation'
 
-const LanguageSelector = ({ color, size, direction }: any) => {
-  const router = useRouter();
+const LanguageSelector = ({ direction }: any) => {
   const [language, setLanguage] = useState('')
   const [isOpen, setIsOpen] = useState(false)
-  const dropdownRef = useRef(null) // Ref to check for outside clicks
+  const dropdownRef = useRef<HTMLDivElement | null>(null)
 
   useEffect(() => {
     const fetchLanguage = async () => {
@@ -44,7 +42,7 @@ const LanguageSelector = ({ color, size, direction }: any) => {
     <div ref={dropdownRef} className="relative z-50 inline-block flex text-left">
       <button className="flex items-center justify-center gap-1" onClick={() => setIsOpen(!isOpen)}>
         {/* Inline SVG for the globe icon */}
-        <div className="m-0 flex text-[#000] items-center justify-center p-0 text-lg">
+        <div className="m-0 flex items-center justify-center p-0 text-lg text-[#000]">
           {language.toLocaleUpperCase()}
         </div>
         <svg

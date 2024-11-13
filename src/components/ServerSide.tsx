@@ -1,5 +1,4 @@
 import { graphQLClient, GET_MENU_ITEMS } from '../lib/graphql-client'
-import LanguageSelector from './LanguageSelector'
 import MenuPage from './Menu'
 import { cookies } from 'next/headers'
 

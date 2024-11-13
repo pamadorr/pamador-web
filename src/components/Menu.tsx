@@ -7,8 +7,6 @@ import NotFound from './NotFound'
 import LanguageSelector from './LanguageSelector'
 import { getCurrentLanguage } from '../lib/cookies'
 import ShimmerLoading from './ShimmerLoading'
-import { div } from 'framer-motion/client'
-import { log } from 'console'
 
 interface Product {
   id: number
@@ -92,8 +90,6 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
   const [isModalVisible, setIsModalVisible] = useState(false)
   const [loading, setLoading] = useState(true)
   const [language, setLanguage] = useState('')
-  const [categoryOffset, setCategoryOffset] = useState({})
-  const [categoryPositons, setcategoryPositons] = useState({})
 
   useEffect(() => {
     if (categories && categories.length > 0) {
@@ -138,7 +134,6 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
           offsetTop: ref ? ref.offsetTop : 0,
         }
       })
-      setcategoryPositons(categoryPositions)
 
       const scrollPosition = window.scrollY + 200
 
@@ -157,13 +152,10 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
     }
 
     window.addEventListener('scroll', handleScroll)
-    console.log('Category positionssssssssssssssssss:', categoryPositons)
-    
 
     return () => {
       window.removeEventListener('scroll', handleScroll)
     }
-
   }, [categories, language])
 
   const handleCategoryClick = (category: string) => {
@@ -196,11 +188,6 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
     categoryRefs.current = {}
 
     fetchLanguage()
-    console.log('language is changde', language)
-    console.log('category offsetr', categoryOffset)
-    if (categoryRefs.current) {
-      console.log('category positons on refresh', categoryRefs.current)
-    }
   }, [categories])
 
   const imageParser = (filename: string): string => {
