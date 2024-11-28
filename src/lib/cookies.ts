@@ -17,5 +17,5 @@ export async function getCurrentLanguage() {
   const cookieStore = cookies()
   const language = cookieStore.get('languageId')
 
-  return language ? language.value : 'tm'
+  return language ? language.value : 'ru'
 }

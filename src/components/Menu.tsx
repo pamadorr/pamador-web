@@ -98,7 +98,7 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
   }, [])
 
   useEffect(() => {
-    setTheme(menuItemss.appTheme || {})
+    setTheme(menuItemss?.appTheme || {})
     setLoading(true)
     if (menuItemss) {
       setLoading(false)
