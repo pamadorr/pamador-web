@@ -14,6 +14,7 @@ interface Product {
   translations: { title: string; description: string }[]
   price: string
   preparationTime: string
+  options: any
 }
 
 interface Menu {
@@ -209,6 +210,7 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
       price: selectedProduct?.price || '',
       description: selectedProduct?.translations[0]?.description || '',
       preparationTime: selectedProduct?.preparationTime,
+      options: selectedProduct?.options,
     }),
     [selectedProduct],
   )
@@ -349,6 +351,7 @@ const MenuPage: FC<MenuPageProps> = ({ menuItemss }) => {
               image={productDetails.image}
               title={productDetails.title}
               price={productDetails.price}
+              options={productDetails.options}
               description={productDetails.description}
               preparationTime={productDetails.preparationTime}
             />
