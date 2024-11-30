@@ -110,7 +110,7 @@ const ProductModal: FC<ProductModalProps> = ({
             <LazyImage
               src={image}
               alt={title}
-              className="h-auto min-h-[250px] w-full bg-lightGray object-cover"
+              className="h-auto min-h-[250px] w-full  object-cover"
             />
 
             <div className="mt-2 flex flex-col p-4 pt-0">
