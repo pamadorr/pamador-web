@@ -7,6 +7,7 @@ interface ProductModalProps {
   onClose: () => void
   image: string
   title: string
+  options: any
   price: string
   description: string
   theme: any
@@ -21,6 +22,7 @@ const ProductModal: FC<ProductModalProps> = ({
   price,
   description,
   theme,
+  options,
   preparationTime,
 }) => {
   const [showModal, setShowModal] = useState(isVisible)
@@ -44,6 +46,7 @@ const ProductModal: FC<ProductModalProps> = ({
 
   useEffect(() => {
     document.body.style.overflow = isVisible ? 'hidden' : 'auto'
+    console.log('options', options)
     return () => {
       document.body.style.overflow = 'auto'
     }
@@ -147,6 +150,35 @@ const ProductModal: FC<ProductModalProps> = ({
                 {price} TMT
               </p>
               <p className="mt-3 text-lg text-primaryText">{description}</p>
+              <div className="">
+                {options?.length > 0 && (
+                  <div>
+                    {options.map((option: any, index: number) => (
+                      <div key={index} className="">
+                        {/* Option Title */}
+                        <h3 className="text-lg font-semibold text-primaryText">
+                          {option.translations[0]?.title}
+                        </h3>
+
+                        {/* Option Metas */}
+                        <ul className=" ">
+                          {option.metas?.map((meta: any, metaIndex: number) => (
+                            <li
+                              key={meta.id || metaIndex}
+                              className="flex justify-between "
+                            >
+                              <span>{meta.translations[0]?.title}</span>
+                              {meta.price > 0 && (
+                                <span className="text-sm text-gray-600">+{meta.price} TMT</span>
+                              )}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
           </motion.div>
         </motion.div>
