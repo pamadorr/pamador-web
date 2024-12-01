@@ -1,4 +1,5 @@
 import './globals.css'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export const metadata = {
   title: 'PAMADOR',
@@ -16,6 +17,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`antialiased`}>{children}</body>
+      <GoogleAnalytics gaId="G-VLXMNZWWK4" />
     </html>
   )
 }
