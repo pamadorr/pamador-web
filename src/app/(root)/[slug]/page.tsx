@@ -6,8 +6,8 @@ interface PageProps {
   }
 }
 
-export default async function Home({ params }: PageProps) {
-  const { slug } = await params
+export default function Home({ params }: PageProps) {
+  const { slug } = params
 
   return (
     <main>
