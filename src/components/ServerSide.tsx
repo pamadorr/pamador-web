@@ -8,10 +8,11 @@ interface ServerSideProps {
 
 export default async function ServerSide({ slug }: ServerSideProps) {
   // Use the slug passed as a prop
-  const cookiesStore = await cookies()
+  const cookiesStore = cookies()
   const languageId = cookiesStore.get('languageId')?.value || 'ru'
   const data = (await graphQLClient.request(GET_MENU_ITEMS, { slug, languageId })) as any
 
+  console.log('fetching')
   return (
     <div>
       {/* Pass the fetched menu items to the client-side component */}
