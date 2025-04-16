@@ -68,6 +68,8 @@ const ProductModal: FC<ProductModalProps> = ({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
+          //eslint-disable-next-line
+          // @ts-ignore
           className="fixed inset-0 z-50 flex items-end justify-center bg-black bg-opacity-50"
           onClick={onClose}
         >
@@ -80,9 +82,13 @@ const ProductModal: FC<ProductModalProps> = ({
             animate={isDesktop ? { scale: 1, opacity: 1 } : { y: 0, opacity: 1 }}
             exit={isDesktop ? { scale: 0.1, opacity: 0 } : { y: 100, opacity: 0 }}
             transition={{ type: 'spring', stiffness: 100, damping: 20 }}
+            //eslint-disable-next-line
+            // @ts-ignore
             className={`${
               isDesktop ? 'm-auto h-auto w-[500px] rounded-2xl' : 'h-max w-full rounded-t-2xl'
             } relative overflow-hidden bg-white shadow-lg`}
+            //eslint-disable-next-line
+            // @ts-ignore
             onClick={(e) => e.stopPropagation()}
           >
             {/* Close Icon */}
